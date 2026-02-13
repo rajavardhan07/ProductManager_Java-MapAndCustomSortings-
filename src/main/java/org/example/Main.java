@@ -11,6 +11,7 @@ public class Main {
 
         Scanner sc = new Scanner(System.in);
         System.out.println("1. Sort by Price Desc(Comparable)\n2. Sort by Price (Asc)\n3. Sort by Rating\n4. Sort by Discount\n5. Filter by Brand\n6. Filter by Category\n7. Filter by Cost Range\nEnter choice:");
+        System.out.print("-----------------------------------------------------------------\n");
         int choice = sc.nextInt();
         
         switch(choice) {
