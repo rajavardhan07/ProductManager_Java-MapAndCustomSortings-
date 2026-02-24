@@ -1,6 +1,8 @@
 package org.example;
 
 import java.util.*;
+import java.util.stream.Stream;
+
 public class ProductManager {
     HashMap<Integer,Product> products = new HashMap<>();
 
@@ -41,18 +43,20 @@ public class ProductManager {
 
     public void mapToListSortByPriceAsc()
     {
-        List<Product> list=new ArrayList<>(products.values());
-        System.out.println("Before sorting by price:");
-        for(Product p:list)
-        {
-            System.out.println(p.getPid()+" "+p.getPname()+" "+p.getPrice()+" "+p.getBrand()+" "+p.getCategory()+" "+p.getRating()+" "+p.getDiscount());
-        }
-        Collections.sort(list,(p1,p2)->Double.compare(p1.getPrice(),p2.getPrice()));
-        System.out.println("After sorting by price:");
-        for(Product p:list)
-        {
-            System.out.println(p.getPid() + " " + p.getPname() + " " + p.getPrice() + " " + p.getBrand() + " " + p.getCategory() + " " + p.getRating() + " " + p.getDiscount());
-        }
+        //        List<Product> list=new ArrayList<>(products.values());
+        //        System.out.println("Before sorting by price:");
+        //        for(Product p:list)
+        //        {
+        //            System.out.println(p.getPid()+" "+p.getPname()+" "+p.getPrice()+" "+p.getBrand()+" "+p.getCategory()+" "+p.getRating()+" "+p.getDiscount());
+        //        }
+        //        Collections.sort(list,(p1,p2)->Double.compare(p1.getPrice(),p2.getPrice()));
+        //        System.out.println("After sorting by price:");
+        //        for(Product p:list)
+        //        {
+        //            System.out.println(p.getPid() + " " + p.getPname() + " " + p.getPrice() + " " + p.getBrand() + " " + p.getCategory() + " " + p.getRating() + " " + p.getDiscount());
+        //        }
+        products.values().stream().sorted(Comparator.comparingDouble(Product::getPrice).reversed())
+                .forEach(p -> System.out.println(p.getPid() + " " + p.getPname() + " " + p.getPrice() + " " + p.getBrand() + " " + p.getCategory() + " " + p.getRating() + " " + p.getDiscount()));
     }
 
     public void mapToListSortByRatingAsc()
@@ -89,35 +93,57 @@ public class ProductManager {
         }
     }
 
-    public void filterByBrand(String Brand){
-        List<Product> list=new ArrayList<>(products.values());
-        System.out.println("Products of brand "+Brand+" are:");
-        for(Product p:list){
-            if(p.getBrand().equals(Brand)){
-                System.out.println(p.getPid() + " " + p.getPname() + " " + p.getPrice() + " " + p.getBrand() + " " + p.getCategory() + " " + p.getRating() + " " + p.getDiscount());
-            }
-        }
+    public Stream<Map.Entry<Integer, Product>> sortByDiscountDescIdAsc(){
+        return products.entrySet().stream()
+                .sorted((e1,e2)->{;
+                    int discountCompare=Integer.compare(e2.getValue().getDiscount(),e1.getValue().getDiscount());
+                    if(discountCompare!=0){
+                        return discountCompare;
+                    }else{
+                        return Integer.compare(e1.getKey(),e2.getKey());
+                    }
+                });
     }
 
-    public void filterByCategory(String cat){
-        List<Product> list=new ArrayList<>(products.values());
-        System.out.println("Products of category "+cat+" are:");
-        for(Product p:list){
-            if(p.getCategory().equals(cat)){
-                System.out.println(p.getPid() + " " + p.getPname() + " " + p.getPrice() + " " + p.getBrand() + " " + p.getCategory() + " " + p.getRating() + " " + p.getDiscount());
-            }
-        }
+    public List<Product> filterByBrand(String Brand){
+        List<Product> list = new ArrayList<>(products.values());
+        //        System.out.println("Products of brand "+Brand+" are:");
+        //        for(Product p:list){
+        //            if(p.getBrand().equals(Brand)){
+        //                System.out.println(p.getPid() + " " + p.getPname() + " " + p.getPrice() + " " + p.getBrand() + " " + p.getCategory() + " " + p.getRating() + " " + p.getDiscount());
+        //            }
+        //        }
+        return products.values().stream()
+                .filter(p -> p.getBrand().equals(Brand))
+                .toList();
+
     }
-    public void filterByPriceRange(double minPrice,double maxPrice){
-        List<Product> list=new ArrayList<>(products.values());
-        System.out.println("Products in price range "+minPrice+" to "+maxPrice+" are:");
-        for(Product p:list)
-        {
-            if(p.getPrice()>=minPrice && p.getPrice()<=maxPrice)
-            {
-                System.out.println(p.getPid() + " " + p.getPname() + " " + p.getPrice() + " " + p.getBrand() + " " + p.getCategory() + " " + p.getRating() + " " + p.getDiscount());
-            }
-        }
+
+    public List<Product> filterByCategory(String cat){
+        //        List<Product> list=new ArrayList<>(products.values());
+        //        System.out.println("Products of category "+cat+" are:");
+        //        for(Product p:list){
+        //            if(p.getCategory().equalsIgnoreCase(cat)){
+        //                System.out.println(p.getPid() + " " + p.getPname() + " " + p.getPrice() + " " + p.getBrand() + " " + p.getCategory() + " " + p.getRating() + " " + p.getDiscount());
+        //            }
+        //        }
+        return products.values().stream()
+                .filter(p->p.getCategory().equals(cat))
+                .toList();
+    }
+    public List<Product> filterByPriceRange(double minPrice,double maxPrice){
+        //        List<Product> list=new ArrayList<>(products.values());
+        //        System.out.println("Products in price range "+minPrice+" to "+maxPrice+" are:");
+        //        for(Product p:list)
+        //        {
+        //            if(p.getPrice()>=minPrice && p.getPrice()<=maxPrice)
+        //            {
+        //                System.out.println(p.getPid() + " " + p.getPname() + " " + p.getPrice() + " " + p.getBrand() + " " + p.getCategory() + " " + p.getRating() + " " + p.getDiscount());
+        //            }
+        //        }
+        return products.values().stream()
+                .filter(p->p.getPrice() >= minPrice && p.getPrice() <= maxPrice)
+                .toList();
     }
 
 
